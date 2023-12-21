@@ -27,12 +27,7 @@ public class ProductService {
         Page<ProductModel> productsList = this.productRepository.findAllWithFilters(name, value, pageable);
         if(!productsList.isEmpty()){
             for(ProductModel product: productsList){
-                UUID id = product.getId();
-                product.add(
-                        linkTo(methodOn(ProductController.class)
-                                .getOneProduct(id))
-                                .withSelfRel()
-                );
+                addLinkToSelfProduct(product);
             }
         }
         return productsList;
@@ -43,11 +38,7 @@ public class ProductService {
         if(product0.isEmpty()){
             throw new EntityNotFoundException();
         }
-        return product0.get().add(
-                linkTo(methodOn(ProductController.class)
-                        .getAllProducts(null, null, null))
-                        .withRel("ProductsList")
-        );
+        return addLinkToListProducts(product0.get());
     }
 
     public ProductModel saveProduct(ProductRecordDto productRecordDto){
@@ -55,11 +46,7 @@ public class ProductService {
         BeanUtils.copyProperties(productRecordDto, productModel);
 
         this.productRepository.save(productModel);
-        return productModel.add(
-                linkTo(methodOn(ProductController.class)
-                        .getOneProduct(productModel.getId()))
-                        .withSelfRel()
-        );
+        return addLinkToSelfProduct(productModel);
     }
 
     public ProductModel updateProduct(UUID id, ProductRecordDto productRecordDto){
@@ -70,11 +57,8 @@ public class ProductService {
         var productModel = product0.get();
         BeanUtils.copyProperties(productRecordDto, productModel);
         this.productRepository.save(productModel);
-        return productModel.add(
-                linkTo(methodOn(ProductController.class)
-                        .getOneProduct(productModel.getId()))
-                        .withSelfRel()
-        );
+        return addLinkToSelfProduct(productModel);
+
     }
 
     public void deleteProduct(UUID id){
@@ -83,5 +67,18 @@ public class ProductService {
             throw  new EntityNotFoundException();
         }
         this.productRepository.delete(product0.get());
+    }
+
+    private ProductModel addLinkToSelfProduct(ProductModel productModel){
+        return productModel.add(
+                linkTo(methodOn(ProductController.class)
+                        .getOneProduct(productModel.getId()))
+                        .withSelfRel());
+    }
+    private ProductModel addLinkToListProducts(ProductModel productModel){
+        return productModel.add(
+                linkTo(methodOn(ProductController.class)
+                        .getAllProducts(null, null, null))
+                        .withRel("ProductsList"));
     }
 }
