@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<ProductModel, UUID> {
     @Query("""
             SELECT p FROM Product p
-            WHERE (:name IS NULL OR p.name = :name)
+            WHERE (:name IS NULL OR :name = '' OR p.name = :name)
             AND (:value IS NULL OR p.value = :value)
             """)
     Page<ProductModel> findAllWithFilters(String name, BigDecimal value, Pageable pageable);
