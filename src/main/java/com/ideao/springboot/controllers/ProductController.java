@@ -37,20 +37,17 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(product0);
     }
     @PostMapping("/products")
-    @Transactional
     public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(this.productService.saveProduct(productRecordDto));
     }
 
     @DeleteMapping("/products/{id}")
-    @Transactional
     public ResponseEntity<Object> deleteProduct(@PathVariable(value="id") UUID id){
         this.productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/products/{id}")
-    @Transactional
     public ResponseEntity<ProductModel> updateProduct(@PathVariable(value="id") UUID id, @RequestBody @Valid ProductRecordDto productRecordDto){
         return ResponseEntity.status(HttpStatus.OK).body(this.productService.updateProduct(id, productRecordDto));
     }

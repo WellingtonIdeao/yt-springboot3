@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class ProductService {
         }
         return addLinkToListProducts(product0.get());
     }
-
+    @Transactional
     public ProductModel saveProduct(ProductRecordDto productRecordDto){
         var productModel = new ProductModel();
         BeanUtils.copyProperties(productRecordDto, productModel);
@@ -48,7 +49,7 @@ public class ProductService {
         this.productRepository.save(productModel);
         return addLinkToSelfProduct(productModel);
     }
-
+    @Transactional
     public ProductModel updateProduct(UUID id, ProductRecordDto productRecordDto){
         Optional<ProductModel> product0 = this.productRepository.findById(id);
         if(product0.isEmpty()){
@@ -60,7 +61,7 @@ public class ProductService {
         return addLinkToSelfProduct(productModel);
 
     }
-
+    @Transactional
     public void deleteProduct(UUID id){
         Optional<ProductModel> product0 = this.productRepository.findById(id);
         if(product0.isEmpty()){
