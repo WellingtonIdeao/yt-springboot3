@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -28,27 +27,27 @@ public class ProductController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) BigDecimal value
             ){
-        var productsList = this.productService.getAllProducts(pageable, name, value);
+        var productsList = this.productService.list(pageable, name, value);
         return ResponseEntity.status(HttpStatus.OK).body(productsList);
     }
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductModel> getOneProduct(@PathVariable(value = "id") UUID id){
-        var product0 = this.productService.getOneProduct(id);
+        var product0 = this.productService.detail(id);
         return ResponseEntity.status(HttpStatus.OK).body(product0);
     }
     @PostMapping("/products")
     public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.productService.saveProduct(productRecordDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.productService.save(productRecordDto));
     }
 
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable(value="id") UUID id){
-        this.productService.deleteProduct(id);
+        this.productService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<ProductModel> updateProduct(@PathVariable(value="id") UUID id, @RequestBody @Valid ProductRecordDto productRecordDto){
-        return ResponseEntity.status(HttpStatus.OK).body(this.productService.updateProduct(id, productRecordDto));
+        return ResponseEntity.status(HttpStatus.OK).body(this.productService.update(id, productRecordDto));
     }
 }

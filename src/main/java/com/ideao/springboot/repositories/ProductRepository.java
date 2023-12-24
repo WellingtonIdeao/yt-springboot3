@@ -16,5 +16,5 @@ public interface ProductRepository extends JpaRepository<ProductModel, UUID> {
             WHERE (:name IS NULL OR :name = '' OR p.name = :name)
             AND (:value IS NULL OR p.value = :value)
             """)
-    Page<ProductModel> findAllWithFilters(String name, BigDecimal value, Pageable pageable);
+    Page<ProductModel> findAllWithFilters(Pageable pageable, String name, BigDecimal value);
 }

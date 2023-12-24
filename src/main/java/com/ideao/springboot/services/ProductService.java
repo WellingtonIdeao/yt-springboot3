@@ -24,8 +24,8 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Page<ProductModel> getAllProducts(Pageable pageable, String name, BigDecimal value){
-        Page<ProductModel> productsList = this.productRepository.findAllWithFilters(name, value, pageable);
+    public Page<ProductModel> list(Pageable pageable, String name, BigDecimal value){
+        Page<ProductModel> productsList = findAll(pageable, name, value);
         if(!productsList.isEmpty()){
             for(ProductModel product: productsList){
                 addLinkToSelfProduct(product);
@@ -34,15 +34,16 @@ public class ProductService {
         return productsList;
     }
 
-    public ProductModel getOneProduct(UUID id){
-        Optional<ProductModel> product0 = this.productRepository.findById(id);
+    public ProductModel detail(UUID id){
+        Optional<ProductModel> product0 = findById(id);
         if(product0.isEmpty()){
             throw new EntityNotFoundException();
         }
         return addLinkToListProducts(product0.get());
     }
+
     @Transactional
-    public ProductModel saveProduct(ProductRecordDto productRecordDto){
+    public ProductModel save(ProductRecordDto productRecordDto){
         var productModel = new ProductModel();
         BeanUtils.copyProperties(productRecordDto, productModel);
 
@@ -50,8 +51,8 @@ public class ProductService {
         return addLinkToSelfProduct(productModel);
     }
     @Transactional
-    public ProductModel updateProduct(UUID id, ProductRecordDto productRecordDto){
-        Optional<ProductModel> product0 = this.productRepository.findById(id);
+    public ProductModel update(UUID id, ProductRecordDto productRecordDto){
+        Optional<ProductModel> product0 = findById(id);
         if(product0.isEmpty()){
             throw new EntityNotFoundException();
         }
@@ -62,12 +63,19 @@ public class ProductService {
 
     }
     @Transactional
-    public void deleteProduct(UUID id){
-        Optional<ProductModel> product0 = this.productRepository.findById(id);
+    public void delete(UUID id){
+        Optional<ProductModel> product0 = findById(id);
         if(product0.isEmpty()){
             throw  new EntityNotFoundException();
         }
         this.productRepository.delete(product0.get());
+    }
+
+    public Page<ProductModel> findAll(Pageable pageable, String name, BigDecimal value){
+        return this.productRepository.findAllWithFilters(pageable, name, value);
+    }
+    public Optional<ProductModel> findById(UUID id){
+        return this.productRepository.findById(id);
     }
 
     private ProductModel addLinkToSelfProduct(ProductModel productModel){
