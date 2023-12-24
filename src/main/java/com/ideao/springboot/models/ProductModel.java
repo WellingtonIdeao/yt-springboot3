@@ -1,6 +1,10 @@
 package com.ideao.springboot.models;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
@@ -9,6 +13,9 @@ import java.util.UUID;
 
 @Entity(name = "Product")
 @Table(name = "tb_products")
+@NoArgsConstructor
+@Getter
+@Setter
 public class ProductModel extends RepresentationModel<ProductModel> implements Serializable{
     private static final long serialVersionUID = 1L;
 
@@ -17,28 +24,4 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private UUID id;
     private String name;
     private BigDecimal value;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigDecimal getValue() {
-        return value;
-    }
-
-    public void setValue(BigDecimal value) {
-        this.value = value;
-    }
 }
